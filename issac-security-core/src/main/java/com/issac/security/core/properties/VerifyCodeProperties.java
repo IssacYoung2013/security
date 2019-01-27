@@ -13,4 +13,6 @@ public class VerifyCodeProperties {
 
     private ImageCodeProperties image = new ImageCodeProperties();
 
+    private SmsCodeProperties sms = new SmsCodeProperties();
+
 }

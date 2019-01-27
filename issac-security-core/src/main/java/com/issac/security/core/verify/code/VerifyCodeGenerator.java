@@ -10,5 +10,5 @@ import org.springframework.web.context.request.ServletWebRequest;
  */
 public interface VerifyCodeGenerator {
 
-    ImageCode generate(ServletWebRequest request);
+    VerifyCode generate(ServletWebRequest request);
 }

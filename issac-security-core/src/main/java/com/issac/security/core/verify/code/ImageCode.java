@@ -12,27 +12,17 @@ import java.time.LocalDateTime;
  * desc:
  */
 @Data
-public class ImageCode {
+public class ImageCode  extends VerifyCode {
 
     public ImageCode(BufferedImage image, String code, LocalDateTime expireTime) {
+        super(code,expireTime);
         this.image = image;
-        this.code = code;
-        this.expireTime = expireTime;
     }
 
     public ImageCode(BufferedImage image, String code,int expireIn) {
+        super(code,expireIn);
         this.image = image;
-        this.code = code;
-        this.expireTime = LocalDateTime.now().plusSeconds(expireIn);
     }
 
     private BufferedImage image;
-
-    private String code;
-
-    private LocalDateTime expireTime;
-
-    public boolean isExpired() {
-        return LocalDateTime.now().isAfter(expireTime);
-    }
 }

@@ -1,6 +1,8 @@
 package com.issac.security.core.verify.code;
 
 import com.issac.security.core.properties.SecurityProperties;
+import com.issac.security.core.verify.code.sms.DefaultSmsCodeSender;
+import com.issac.security.core.verify.code.sms.SmsCodeSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -23,5 +25,11 @@ public class VerifyCodeBeanConfig {
         ImageCodeGenerator imageCodeGenerator = new ImageCodeGenerator();
         imageCodeGenerator.setSecurityProperties(securityProperties);
         return imageCodeGenerator;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(SmsCodeSender.class)
+    public SmsCodeSender smsCodeSender() {
+        return new DefaultSmsCodeSender();
     }
 }
