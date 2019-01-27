@@ -1,5 +1,6 @@
 package com.issac.security.core.verify.code;
 
+import com.issac.security.core.constants.SecurityConstants;
 import com.issac.security.core.properties.SecurityProperties;
 import com.issac.security.core.verify.code.image.ImageCode;
 import lombok.Data;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.connect.web.SessionStrategy;
+import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -21,7 +23,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -31,28 +35,62 @@ import java.util.Set;
  */
 @Slf4j
 @Data
+@Component("verifyCodeFilter")
 public class VerifyCodeFilter extends OncePerRequestFilter implements InitializingBean {
 
+    /**
+     * Session 操作类
+     */
     private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
 
     private AuthenticationFailureHandler authenticationFailureHandler;
 
     private Set<String> urls = new HashSet<>();
 
+    /**
+     * 存放所有需要校验验证码的url
+     */
+    private Map<String,VerifyCodeType> urlMap = new HashMap<>();
+
+    /**
+     * 系统配置信息
+     */
     @Autowired
     private SecurityProperties securityProperties;
 
+    /**
+     * 验证请求url与配置url是否匹配的工具类
+     */
     private AntPathMatcher pathMatcher = new AntPathMatcher();
 
+    /**
+     * 初始化要拦截的url配置信息
+     *
+     * @throws ServletException
+     */
     @Override
     public void afterPropertiesSet() throws ServletException {
         super.afterPropertiesSet();
-        String[] configUrls = StringUtils.splitByWholeSeparatorPreserveAllTokens(securityProperties.getCode().getImage().getUrl(), ",");
-        for (String configUrl :
-                configUrls) {
-            urls.add(configUrl);
+        urlMap.put(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_FORM,VerifyCodeType.IMAGE);
+        addUrlMap(securityProperties.getCode().getImage().getUrl(),VerifyCodeType.IMAGE);
+
+        urlMap.put(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE,VerifyCodeType.SMS);
+        addUrlMap(securityProperties.getCode().getSms().getUrl(),VerifyCodeType.SMS);
+    }
+
+    /**
+     * 将系统中配置的需要校验码的URL根据校验类型放入map
+     * @param urlString
+     * @param type
+     */
+    protected void addUrlMap(String urlString,VerifyCodeType type) {
+        if(StringUtils.isNotBlank(urlString)) {
+            String[] configUrls = StringUtils.splitByWholeSeparatorPreserveAllTokens(securityProperties.getCode().getImage().getUrl(), ",");
+            for (String configUrl :
+                    configUrls) {
+                urlMap.put(configUrl,type);
+            }
         }
-        urls.add("/authentication/form");
     }
 
     @Override
@@ -70,6 +108,7 @@ public class VerifyCodeFilter extends OncePerRequestFilter implements Initializi
         if (action) {
             try {
                 validate(new ServletWebRequest(request));
+                log.info("验证码校验通过");
             } catch (VerifyCodeException e) {
                 authenticationFailureHandler.onAuthenticationFailure(request, response, e);
                 return;
