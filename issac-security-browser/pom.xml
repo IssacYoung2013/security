@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>issac-security</artifactId>
+        <groupId>com.issac.security</groupId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../issac-security</relativePath>
+    </parent>
+
+    <groupId>com.issac.security</groupId>
+    <artifactId>issac-security-browser</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.issac.security</groupId>
+            <artifactId>issac-security-core</artifactId>
+            <version>${issac-security-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session</artifactId>
+            <version>1.3.5.RELEASE</version>
+        </dependency>
+
+    </dependencies>
+    
+</project>
