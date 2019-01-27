@@ -2,7 +2,9 @@ package com.issac.security.browser;
 
 import com.issac.security.browser.authentication.IssacAuthenticationFailureHandler;
 import com.issac.security.browser.authentication.IssacAuthenticationSuccessHandler;
+import com.issac.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
 import com.issac.security.core.properties.SecurityProperties;
+import com.issac.security.core.verify.code.SmsCodeFilter;
 import com.issac.security.core.verify.code.VerifyCodeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -46,7 +48,10 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
     private DataSource dataSource;
 
     @Autowired
-    private UserDetailsService myUserDetailService;
+    private UserDetailsService userDetailService;
+
+    @Autowired
+    private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -68,8 +73,15 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
         verifyCodeFilter.setAuthenticationFailureHandler(issacAuthenticationFailureHandler);
         verifyCodeFilter.setSecurityProperties(securityProperties);
         verifyCodeFilter.afterPropertiesSet();
+
+        SmsCodeFilter smsCodeFilter = new SmsCodeFilter();
+        smsCodeFilter.setAuthenticationFailureHandler(issacAuthenticationFailureHandler);
+        smsCodeFilter.setSecurityProperties(securityProperties);
+        smsCodeFilter.afterPropertiesSet();
+
 //        所有的请求都需要身份认证
         http.addFilterBefore(verifyCodeFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(smsCodeFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin()
 //                .loginPage("/issac-signIn.html")
                 .loginPage("/authentication/require")
@@ -80,7 +92,7 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                 .rememberMe()
                 .tokenRepository(persistentTokenRepository())
                 .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
-                .userDetailsService(myUserDetailService)
+                .userDetailsService(userDetailService)
 //        http.httpBasic()
                 .and()
                 .authorizeRequests()
@@ -91,6 +103,7 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/code/*").permitAll()
                 .anyRequest()
                 .authenticated()
-                .and().csrf().disable();
+                .and().csrf().disable()
+                .apply(smsCodeAuthenticationSecurityConfig);
     }
 }

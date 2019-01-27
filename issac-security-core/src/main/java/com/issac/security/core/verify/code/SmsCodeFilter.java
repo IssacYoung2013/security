@@ -31,7 +31,7 @@ import java.util.Set;
  */
 @Slf4j
 @Data
-public class VerifyCodeFilter extends OncePerRequestFilter implements InitializingBean {
+public class SmsCodeFilter extends OncePerRequestFilter implements InitializingBean {
 
     private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
 
@@ -47,12 +47,12 @@ public class VerifyCodeFilter extends OncePerRequestFilter implements Initializi
     @Override
     public void afterPropertiesSet() throws ServletException {
         super.afterPropertiesSet();
-        String[] configUrls = StringUtils.splitByWholeSeparatorPreserveAllTokens(securityProperties.getCode().getImage().getUrl(), ",");
+        String[] configUrls = StringUtils.splitByWholeSeparatorPreserveAllTokens(securityProperties.getCode().getSms().getUrl(), ",");
         for (String configUrl :
                 configUrls) {
             urls.add(configUrl);
         }
-        urls.add("/authentication/form");
+        urls.add("/authentication/mobile");
     }
 
     @Override
@@ -81,9 +81,9 @@ public class VerifyCodeFilter extends OncePerRequestFilter implements Initializi
 
     private void validate(ServletWebRequest request) throws ServletRequestBindingException {
 
-        ImageCode codeInSession = (ImageCode) sessionStrategy.getAttribute(request, VerifyCodeProcessor.SESSION_KEY_PREFIX + "IMAGE");
+        VerifyCode codeInSession = (VerifyCode) sessionStrategy.getAttribute(request, VerifyCodeProcessor.SESSION_KEY_PREFIX + "SMS");
 
-        String codeInRequest = ServletRequestUtils.getStringParameter(request.getRequest(), "imageCode");
+        String codeInRequest = ServletRequestUtils.getStringParameter(request.getRequest(), "smsCode");
 
         if (StringUtils.isBlank(codeInRequest)) {
             throw new VerifyCodeException("验证码的值不能为空");
@@ -94,7 +94,7 @@ public class VerifyCodeFilter extends OncePerRequestFilter implements Initializi
         }
 
         if (codeInSession.isExpired()) {
-            sessionStrategy.removeAttribute(request, VerifyCodeProcessor.SESSION_KEY_PREFIX + "IMAGE");
+            sessionStrategy.removeAttribute(request, VerifyCodeProcessor.SESSION_KEY_PREFIX + "SMS");
             throw new VerifyCodeException("验证码已过期");
         }
 
@@ -102,6 +102,6 @@ public class VerifyCodeFilter extends OncePerRequestFilter implements Initializi
             throw new VerifyCodeException("验证码不匹配");
         }
 
-        sessionStrategy.removeAttribute(request, VerifyCodeProcessor.SESSION_KEY_PREFIX + "IMAGE");
+        sessionStrategy.removeAttribute(request, VerifyCodeProcessor.SESSION_KEY_PREFIX + "SMS");
     }
 }

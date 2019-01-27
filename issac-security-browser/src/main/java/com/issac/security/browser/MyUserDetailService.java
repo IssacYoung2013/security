@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * date:    2019-01-26
  * desc:
  */
-@Component
+@Component("userDetailService")
 @Slf4j
 public class MyUserDetailService implements UserDetailsService {
 

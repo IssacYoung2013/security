@@ -13,7 +13,7 @@ public interface VerifyCodeProcessor {
     /**
      * 验证码放入session时的前缀
      */
-    String SESSION_KEY = "SESSION_KEY_IMAGE_CODE";
+    String SESSION_KEY_PREFIX = "SESSION_KEY_IMAGE_CODE";
 
     /**
      * 创建校验码

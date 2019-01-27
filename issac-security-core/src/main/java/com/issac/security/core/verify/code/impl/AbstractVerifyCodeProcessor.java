@@ -49,7 +49,11 @@ public abstract class AbstractVerifyCodeProcessor<C> implements VerifyCodeProces
 
     private void save(ServletWebRequest request, C verifyCode) {
         // 将随机数存到 Session
-        sessionStrategy.setAttribute(request,SESSION_KEY,verifyCode);
+        sessionStrategy.setAttribute(request,getSessionKey(request),verifyCode);
+    }
+
+    private String getSessionKey(ServletWebRequest request){
+        return SESSION_KEY_PREFIX + getProcessorType(request).toString().toUpperCase();
     }
 
     /**
