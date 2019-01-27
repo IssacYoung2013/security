@@ -1,4 +1,9 @@
-/target/
+/issac-security/target/
+/issac-security-app/target/
+/issac-security-browser/target/
+/issac-security-core/target/
+/issac-security-demo/target/
+
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
@@ -23,3 +28,5 @@
 /dist/
 /nbdist/
 /.nb-gradle/
+
+*.txt

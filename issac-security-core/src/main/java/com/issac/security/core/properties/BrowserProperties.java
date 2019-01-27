@@ -14,4 +14,6 @@ public class BrowserProperties {
     private String loginPage = "/issac-signIn.html";
 
     private LoginResponseType loginResponseType =  LoginResponseType.JSON;
+
+    private int rememberMeSeconds = 3600;
 }
