@@ -1,6 +1,9 @@
-package com.issac.security.core.verify.code;
+package com.issac.security.core.verify.code.image;
 
+import com.issac.security.core.verify.code.VerifyCode;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.awt.image.BufferedImage;
 import java.time.LocalDateTime;
@@ -11,7 +14,8 @@ import java.time.LocalDateTime;
  * date:    2019-01-26
  * desc:
  */
-@Data
+@Getter
+@Setter
 public class ImageCode  extends VerifyCode {
 
     public ImageCode(BufferedImage image, String code, LocalDateTime expireTime) {

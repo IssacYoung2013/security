@@ -88,7 +88,7 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/issac-signIn.html").permitAll()
                 .antMatchers("/authentication/require",
                         securityProperties.getBrowser().getLoginPage(),
-                        "/code/image").permitAll()
+                        "/code/*").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and().csrf().disable();

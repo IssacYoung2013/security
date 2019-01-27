@@ -1,9 +1,10 @@
-package com.issac.security.core.verify.code;
+package com.issac.security.core.verify.code.image;
 
 import com.issac.security.core.properties.SecurityProperties;
+import com.issac.security.core.verify.code.VerifyCodeGenerator;
+import com.issac.security.core.verify.code.image.ImageCode;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
 

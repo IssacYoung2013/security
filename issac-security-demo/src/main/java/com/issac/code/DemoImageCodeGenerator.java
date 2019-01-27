@@ -1,8 +1,7 @@
 package com.issac.code;
 
-import com.issac.security.core.verify.code.ImageCode;
+import com.issac.security.core.verify.code.image.ImageCode;
 import com.issac.security.core.verify.code.VerifyCodeGenerator;
-import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.ServletWebRequest;
 
 /**

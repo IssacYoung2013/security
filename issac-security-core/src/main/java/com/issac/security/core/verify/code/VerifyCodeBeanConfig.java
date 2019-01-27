@@ -1,6 +1,7 @@
 package com.issac.security.core.verify.code;
 
 import com.issac.security.core.properties.SecurityProperties;
+import com.issac.security.core.verify.code.image.ImageCodeGenerator;
 import com.issac.security.core.verify.code.sms.DefaultSmsCodeSender;
 import com.issac.security.core.verify.code.sms.SmsCodeSender;
 import org.springframework.beans.factory.annotation.Autowired;

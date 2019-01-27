@@ -1,6 +1,7 @@
 package com.issac.security.core.verify.code;
 
 import com.issac.security.core.properties.SecurityProperties;
+import com.issac.security.core.verify.code.image.ImageCode;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -80,7 +81,7 @@ public class VerifyCodeFilter extends OncePerRequestFilter implements Initializi
 
     private void validate(ServletWebRequest request) throws ServletRequestBindingException {
 
-        ImageCode codeInSession = (ImageCode) sessionStrategy.getAttribute(request, VerifyCodeController.SESSION_KEY);
+        ImageCode codeInSession = (ImageCode) sessionStrategy.getAttribute(request, VerifyCodeProcessor.SESSION_KEY);
 
         String codeInRequest = ServletRequestUtils.getStringParameter(request.getRequest(), "imageCode");
 
@@ -93,7 +94,7 @@ public class VerifyCodeFilter extends OncePerRequestFilter implements Initializi
         }
 
         if (codeInSession.isExpired()) {
-            sessionStrategy.removeAttribute(request, VerifyCodeController.SESSION_KEY);
+            sessionStrategy.removeAttribute(request, VerifyCodeProcessor.SESSION_KEY);
             throw new VerifyCodeException("验证码已过期");
         }
 
@@ -101,6 +102,6 @@ public class VerifyCodeFilter extends OncePerRequestFilter implements Initializi
             throw new VerifyCodeException("验证码不匹配");
         }
 
-        sessionStrategy.removeAttribute(request, VerifyCodeController.SESSION_KEY);
+        sessionStrategy.removeAttribute(request, VerifyCodeProcessor.SESSION_KEY);
     }
 }

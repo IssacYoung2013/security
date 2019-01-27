@@ -24,9 +24,9 @@ public class VerifyCode {
         this.expireTime = LocalDateTime.now().plusSeconds(expireIn);
     }
 
-    private String code;
+    protected String code;
 
-    private LocalDateTime expireTime;
+    protected LocalDateTime expireTime;
 
     public boolean isExpired() {
         return LocalDateTime.now().isAfter(expireTime);
