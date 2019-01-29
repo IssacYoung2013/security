@@ -30,3 +30,4 @@
 /.nb-gradle/
 
 *.txt
+*.DS_Store

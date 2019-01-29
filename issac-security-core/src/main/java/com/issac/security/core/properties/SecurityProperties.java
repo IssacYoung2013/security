@@ -17,4 +17,6 @@ public class SecurityProperties {
 
     private VerifyCodeProperties code = new VerifyCodeProperties();
 
+    private SocialProperties social = new SocialProperties();
+
 }
